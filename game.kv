@@ -1,0 +1,110 @@
+
+#:set padding 10
+
+
+FloatLayout:
+	orientation: 'vertical' if root.height < root.width else 'horizontal'
+	canvas:
+		Color:
+		    rgb: 0xfa / 255., 0xf8 / 255., 0xef / 255.
+		BorderImage:
+		    pos: self.pos
+		    size: self.size
+		    source: './image/round.png'
+	BoxLayout:
+		pos_hint: {'center_x': 0.5, 'y': 0.75}
+		size_hint_y: 0.25
+		spacing: '10dp'
+		padding: '5dp'
+		orientation: 'horizontal'
+		Label:
+			text: '2048'
+			font_size: min(self.height, self.width) / 2.
+			color: 0x77 / 255., 0x6e / 255., 0x65 / 255., 1.
+			bold: True
+
+		BoxLayout:
+			orientation: 'vertical'
+			spacing: '10dp'
+			canvas.before:
+				Color:
+					rgb: 0xbb / 255., 0xad / 255., 0xa0 / 255.
+				BorderImage:
+					pos: self.pos
+					size: self.size
+					source: 'image/round.png'
+
+			Label:
+				text: 'SCORE'
+				color: 0xee / 255., 0xe4 / 255., 0xda / 255., 1.
+				font_size: self.height / 1.5
+				size_hint_y: .8
+				bold: True
+			Label:
+				text: str(board.score)
+				font_size: self.height / 1.5
+				bold: True
+	Board:
+		id: board
+		
+		canvas:
+			Color:
+				rgba:0xbb / 255., 0xad / 255., 0xa0 / 255.,.8
+			BorderImage:
+				pos: self.pos
+				size: self.size
+				source: 'image/round.png'
+			
+		pos_hint: {'center_x': 0.5, 'center_y': 0.375}
+		size_hint: (None, None)
+		center: root.center
+		size: [min(root.width, root.height*.75) - 2 * padding] * 2
+		AnchorLayout:
+			id: end
+			pos: board.pos
+			size: board.size
+			opacity: 0
+
+			canvas:
+				Color:
+					rgba: 0xfa / 255., 0xf8 / 255., 0xef / 255., self.opacity - 0.2
+				BorderImage:
+					pos: self.pos
+					size: self.size
+					source: 'image/round.png'
+
+			BoxLayout:
+
+				orientation: 'vertical'
+				padding: '10dp'
+				spacing: '20dp'
+
+				Label:
+					id: end_label
+					font_size: min(self.height, self.width) / 3.
+					color: 0x77 / 255., 0x6e / 255., 0x65 / 255., 1.
+					bold: True
+					text: 'Game\nover!'
+					halign: 'center'
+
+				Button:
+					text: 'Restart'
+					on_press: self.parent.parent.parent.restart() if end.opacity == 1. else None
+					font_size: '20dp'
+	
+<Tile>:
+    canvas:
+        Color:
+            rgb: self.color
+        BorderImage:
+            pos: self.pos
+            size: self.size
+            source: './image/round.png'
+    Label:
+        pos: root.pos
+        size: root.size
+        bold: True
+        color: root.number_color
+        font_size: root.font_size
+        text: str(root.number)
+
